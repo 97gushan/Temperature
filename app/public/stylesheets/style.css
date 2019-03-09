@@ -10,15 +10,15 @@ body{
   float: left;
 }
 
-#temperature{
+#currentTempContainer{
   width: 20%;
   height: 500px;
   float: left;
 }
 
 
-#wasd{
+#currentTemp{
   font-size: 150px;
-  margin: auto;
   color: #dddddd;
+  padding: 30%;
 }
