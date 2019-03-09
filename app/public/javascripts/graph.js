@@ -16,14 +16,18 @@ chart.data = [];
 var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
 dateAxis.startLocation = 5;
 dateAxis.endLocation = 0.5;
+dateAxis.title.text = "Timestamp";
+
 
 // Create value axis
 var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Temperature";
 
 // Create series
 var series = chart.series.push(new am4charts.LineSeries());
-series.dataFields.valueY = "visits";
+series.dataFields.valueY = "temp";
 series.dataFields.dateX = "date";
+
 series.strokeWidth = 3;
 series.tooltipText = "{valueY.value}";
 series.fillOpacity = 0.1;
@@ -52,50 +56,52 @@ chart.cursor = new am4charts.XYCursor();
 chart.cursor.xAxis = dateAxis;
 chart.zoomOutButton.disabled = true;
 chart.scrollbarX = new am4core.Scrollbar();
-//chart.chartScrollbarSettings.enabled = false;
 
 function startInterval(){
     
     let interval = setInterval(function(){
-        let lastVal = chart.data[chart.data.length-1]["visits"];
-        //console.log(chart.data);
-
-        addPoint(lastVal);
-
         
+        value = getTemperature();
+        updateCurrentTemp(value);
 
-    }, 1000);
+
+        addPoint(value);
+
+    }, 500);
 }
 
-function addPoint(lastVal){
+function getTemperature(){
+    let lastVal = chart.data[chart.data.length-1]["temp"];
 
-    //console.log(lastVal);
+        let value = lastVal + ((Math.random()-0.5)/10);
+    return value;
+}
 
-    if(lastVal != undefined){
-        if(chart.data.length > 150){
-            removeFlag = 1;
-        }else{
-            removeFlag = 0;
-        }
-        
+function updateCurrentTemp(value){
+    let currentTempDiv = $("#currentTemp");
 
-        chart.addData({
-            date: Date.now(),
-            visits: lastVal + (Math.random()-0.5)
-        }, removeFlag );
-        
+    currentTempDiv.text(value.toFixed(1));
+}
+
+function addPoint(value){
+
+
+    if(chart.data.length > 300){
+        removeFlag = 1;
     }else{
-        chart.addData({
-            date: Date.now(),
-            visits: (4*Math.random()-2)
-          });
+        removeFlag = 0;
     }
+    
+
+    chart.addData({
+        date: Date.now(),
+        temp: value
+    }, removeFlag );
+        
+    
 }
-
-
 
 $("body").click(function(){
-    addPoint();
+    addPoint(2*Math.random()-1);
     startInterval();
-    console.log("wwwubbbb");
 });
