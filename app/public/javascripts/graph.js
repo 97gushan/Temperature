@@ -6,7 +6,7 @@ am4core.useTheme(am4themes_animated);
 // Themes end
 
 // Create chart instance
-var chart = am4core.create("chartdiv", am4charts.XYChart);
+var chart = am4core.create("chart", am4charts.XYChart);
 
 // Add data
 chart.data = [];
@@ -72,7 +72,7 @@ function addPoint(lastVal){
     //console.log(lastVal);
 
     if(lastVal != undefined){
-        if(chart.data.length > 300){
+        if(chart.data.length > 150){
             removeFlag = 1;
         }else{
             removeFlag = 0;
