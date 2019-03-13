@@ -1,7 +1,11 @@
 import os
 import glob
 import time
- 
+import datetime
+
+from influxdb import InfluxDBClient
+
+
 os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
  
@@ -9,6 +13,8 @@ base_dir = '/sys/bus/w1/devices/'
 device_folder = glob.glob(base_dir + '28*')[0]
 device_file = device_folder + '/w1_slave'
  
+client = None
+
 def read_temp_raw():
     f = open(device_file, 'r')
     lines = f.readlines()
@@ -28,6 +34,41 @@ def read_temp():
         
         return temp
 	
-while True:
-	print(read_temp())	
-	time.sleep(1)
+
+    
+
+def getJson(temp, timestamp):
+
+    json = [
+        {
+            "measurement" : "measuredTemp",
+            "tags": {
+                "sensorType": "DS18B20"
+            },
+            "time": timestamp,
+            "fields": {
+                "temperature" : temp
+            }
+        }
+    ]
+
+
+def main():
+
+    client = InfluxDBClient(host = "localhost", port=8086)
+    
+    client.switch_database('temperature')
+
+    while True:
+
+        temp = read_temp()
+        timestamp = datetime.datetime.utcnow().isoformat()
+
+        client.write_points(getJson(temp, timestamp))
+        print(timestamp, temp)	
+        time.sleep(1)
+
+main()
+
+
+    
