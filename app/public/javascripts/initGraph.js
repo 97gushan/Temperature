@@ -1,4 +1,3 @@
-
 // Themes begin
 am4core.useTheme(am4themes_dark);
 am4core.useTheme(am4themes_animated);
@@ -56,52 +55,3 @@ chart.cursor = new am4charts.XYCursor();
 chart.cursor.xAxis = dateAxis;
 chart.zoomOutButton.disabled = true;
 chart.scrollbarX = new am4core.Scrollbar();
-
-function startInterval(){
-    
-    let interval = setInterval(function(){
-        
-        value = getTemperature();
-        updateCurrentTemp(value);
-
-
-        addPoint(value);
-
-    }, 500);
-}
-
-function getTemperature(){
-    let lastVal = chart.data[chart.data.length-1]["temp"];
-
-        let value = lastVal + ((Math.random()-0.5)/10);
-    return value;
-}
-
-function updateCurrentTemp(value){
-    let currentTempDiv = $("#currentTemp");
-
-    currentTempDiv.text(value.toFixed(1));
-}
-
-function addPoint(value){
-
-
-    if(chart.data.length > 300){
-        removeFlag = 1;
-    }else{
-        removeFlag = 0;
-    }
-    
-
-    chart.addData({
-        date: Date.now(),
-        temp: value
-    }, removeFlag );
-        
-    
-}
-
-$("body").click(function(){
-    addPoint(2*Math.random()-1);
-    startInterval();
-});
