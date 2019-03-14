@@ -1,4 +1,10 @@
 
+
+const CURRENT_TEMP_TIMER = 1000;
+const GRAPH_TIMER = 1000*30;
+const X_AXIS_WIDTH = 6000;
+
+
 /**
  * Starts a interval to update the graph every 30 second.
  */
@@ -6,7 +12,7 @@ function startGraphInterval(){
 
     setInterval(function(){
         getTemperature();
-    }, 1000*30);
+    }, GRAPH_TIMER);
 }
 
 /**
@@ -15,7 +21,7 @@ function startGraphInterval(){
 function startCurrentTempInterval(){
     setInterval(function(){
         getCurrentTemp();
-    }, 1000);
+    }, CURRENT_TEMP_TIMER);
 }
 
 /**
@@ -31,7 +37,7 @@ function getTemperatureInterval(){
 /**
  * Get the temp from the the API with a getJSON call
  */
-async function getTemperature(){
+function getTemperature(){
 
     $.getJSON("api/getTemp", function(tempJson){
         updateGraph(tempJson);
@@ -42,7 +48,7 @@ async function getTemperature(){
 /**
  * Get the current temp from the the API with a getJSON call
  */
-async function getCurrentTemp(){
+function getCurrentTemp(){
 
     $.getJSON("api/getCurrentTemp", function(tempJson){
         updateCurrentTemp(tempJson[0].temperature);
@@ -56,11 +62,8 @@ async function getCurrentTemp(){
  */
 function updateCurrentTemp(value){
     if(value != null){
-        let currentTempDiv = $("#currentTemp");
-
-        currentTempDiv.text(value.toFixed(1));
+        $("#currentTemp").text(value.toFixed(1));
     }
- 
 }
 
 /**
@@ -87,7 +90,7 @@ function addPoint(value, time){
 
     // if the amount of data increases beyond the limit, set the flag to 1 so 
     // the first element in the graph is removed on insertion of new values
-    chart.data.length > 6000 ? removeFlag = 1 : removeFlag = 0;
+    chart.data.length > X_AXIS_WIDTH ? removeFlag = 1 : removeFlag = 0;
  
 
     chart.addData({
