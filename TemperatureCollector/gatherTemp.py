@@ -51,7 +51,7 @@ def getJson(temp, timestamp):
             }
         }
     ]
-
+    return json
 
 def main():
 
@@ -65,7 +65,7 @@ def main():
         timestamp = datetime.datetime.utcnow().isoformat()
 
         client.write_points(getJson(temp, timestamp))
-        print(timestamp, temp)	
+        #print(timestamp, temp)	
         time.sleep(1)
 
 main()
